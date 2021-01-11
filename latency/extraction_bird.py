@@ -234,6 +234,10 @@ def trial_2(fname):
             r1_send.append(item)
         else:
             r1_receive.append(item)
+    #for item in r1_send:
+    #    print(item)
+    #for item in r1_receive:
+    #    print(item)
     r1_send2 = r1_send
     r1_receive2 = r1_receive
     r1_send_if_recv =defaultdict(set)
@@ -359,10 +363,12 @@ def run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_r
 
 
 def main():
-    r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv = trial_1('lb800_1_3.txt')
-    r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv = trial_1('lb800_2_3.txt')
-    r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv = trial_2('lb1000_1_2.txt')
-    run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv, r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv)
+    #r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv = trial_1('lb800_1_3.txt')
+    #r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv = trial_1('lb800_2_3.txt')
+    #r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv = trial_2('lb1000_1_2.txt')
+    #run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv, r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv)
+    r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv = trial_2('example.txt')
+
 main()
 #DB Description (2)
 #LS Update (4)
