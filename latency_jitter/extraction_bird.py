@@ -18,7 +18,7 @@ def peek_line(f):
     f.seek(pos)
     return line
 
-def trial_1(fname):
+def triangle(fname):
     inter = ""
     src_router = ""
     des_router = ""
@@ -162,10 +162,10 @@ def trial_1(fname):
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r3_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
+    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv]
+    return result
 
-    return r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv
-
-def trial_2(fname):
+def double(fname):
     inter = ""
     src_router = ""
     des_router = ""
@@ -268,69 +268,24 @@ def trial_2(fname):
                 r2_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
 
+    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv]
+    return result
 
-    return r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv
-
-def run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv, r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv,r9_recv_if_send, r9_send_if_recv, r10_recv_if_send, r10_send_if_recv,r11_recv_if_send, r11_send_if_recv,r12_recv_if_send, r12_send_if_recv,r13_recv_if_send, r13_send_if_recv,r14_recv_if_send, r14_send_if_recv,r15_recv_if_send, r15_send_if_recv,r16_recv_if_send, r16_send_if_recv):
+def run(final_result):
     send_dict = defaultdict(set)
     recv_dict = defaultdict(set)
 
-    for i in range(16):
-        if i ==0:
-            r_recv_if_send = r1_recv_if_send
-            r_send_if_recv = r1_send_if_recv
-        elif i ==1:
-            r_recv_if_send = r2_recv_if_send
-            r_send_if_recv = r2_send_if_recv
-        elif i ==2:
-            r_recv_if_send = r3_recv_if_send
-            r_send_if_recv = r3_send_if_recv
-        elif i ==3:
-            r_recv_if_send = r4_recv_if_send
-            r_send_if_recv = r4_send_if_recv
-        elif i ==4:
-            r_recv_if_send = r5_recv_if_send
-            r_send_if_recv = r5_send_if_recv
-        elif i ==5:
-            r_recv_if_send = r6_recv_if_send
-            r_send_if_recv = r6_send_if_recv
-        elif i ==6:
-            r_recv_if_send = r7_recv_if_send
-            r_send_if_recv = r7_send_if_recv
-        elif i ==7:
-            r_recv_if_send = r8_recv_if_send
-            r_send_if_recv = r8_send_if_recv
-        elif i ==8:
-            r_recv_if_send = r9_recv_if_send
-            r_send_if_recv = r9_send_if_recv
-        elif i ==9:
-            r_recv_if_send = r10_recv_if_send
-            r_send_if_recv = r10_send_if_recv
-        elif i ==10:
-            r_recv_if_send = r11_recv_if_send
-            r_send_if_recv = r11_send_if_recv
-        elif i ==11:
-            r_recv_if_send = r12_recv_if_send
-            r_send_if_recv = r12_send_if_recv
-        elif i ==12:
-            r_recv_if_send = r13_recv_if_send
-            r_send_if_recv = r13_send_if_recv
-        elif i ==13:
-            r_recv_if_send = r14_recv_if_send
-            r_send_if_recv = r14_send_if_recv
-        elif i ==14:
-            r_recv_if_send = r15_recv_if_send
-            r_send_if_recv = r15_send_if_recv
-        elif i ==15:
-            r_recv_if_send = r16_recv_if_send
-            r_send_if_recv = r16_send_if_recv
-        #print(type(r_recv_if_send))
-        for item in r_recv_if_send:
-            for item2 in r_recv_if_send[item]:
-                recv_dict[item].add(item2)
-        for item in r_send_if_recv:
-            for item2 in r_send_if_recv[item]:
-                send_dict[item].add(item2)
+    for i in range(len(final_result)):
+        for j in range(len(final_result[i])):
+            if j % 2 == 0:
+                r_recv_if_send = final_result[i][j]
+                r_send_if_recv = final_result[i][j+1]
+                for item in r_recv_if_send:
+                    for item2 in r_recv_if_send[item]:
+                        recv_dict[item].add(item2)
+                for item in r_send_if_recv:
+                    for item2 in r_send_if_recv[item]:
+                        send_dict[item].add(item2)
 
     print("List of packets can be received given last sent packet type")
     for key in recv_dict:
@@ -346,15 +301,16 @@ def run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_r
 
 
 def main():
-    r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv = trial_1('lb800_1_3.txt')
-    r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv = trial_1('lb800_2_3.txt')
-    r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv = trial_2('lb1000_1_2.txt')
+    result1 = triangle('lb800_1_3.txt')
+    result2 = triangle('lb800_2_3.txt')
+    result3 = double('lb1000_1_2.txt')
     #
-    r9_recv_if_send, r9_send_if_recv, r10_recv_if_send, r10_send_if_recv, r11_recv_if_send, r11_send_if_recv = trial_1('lb800_3_3.txt')
-    r12_recv_if_send, r12_send_if_recv, r13_recv_if_send, r13_send_if_recv, r14_recv_if_send, r14_send_if_recv = trial_1('lb800_3_3.txt')
-    r15_recv_if_send, r15_send_if_recv, r16_recv_if_send, r16_send_if_recv = trial_2('lb1000_2_2.txt')
+    result4 = triangle('lb800_3_3.txt')
+    result5 = triangle('lb800_3_3.txt')
+    result6 = double('lb1000_2_2.txt')
+    final_result = [result1,result2,result3,result4,result5,result6]
     #
-    run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv, r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv,r9_recv_if_send, r9_send_if_recv, r10_recv_if_send, r10_send_if_recv,r11_recv_if_send, r11_send_if_recv,r12_recv_if_send, r12_send_if_recv,r13_recv_if_send, r13_send_if_recv,r14_recv_if_send, r14_send_if_recv,r15_recv_if_send, r15_send_if_recv,r16_recv_if_send, r16_send_if_recv)
+    run(final_result)
 main()
 #DB Description (2)
 #LS Update (4)
