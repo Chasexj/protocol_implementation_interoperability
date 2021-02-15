@@ -1,0 +1,26 @@
+bird> jchauhan@scoobydoo:~/bird_conf/frrouting_automation$ docker exec -it router1 birdc
+BIRD 2.0.7 ready.
+bird> show ospf neighbor
+MyOSPF:
+Router ID       Pri          State      DTime   Interface  Router IP
+10.10.0.3         1     Full/DR         49.128  eth1       10.10.0.3
+bird> jchauhan@scoobydoo:~/bird_conf/frrouting_automation$ docker exec -it router2 birdc
+BIRD 2.0.7 ready.
+bird> show ospf neighbor
+MyOSPF:
+Router ID       Pri          State      DTime   Interface  Router IP
+10.10.0.2         1     Full/BDR        48.142  eth1       10.10.0.2
+10.10.0.11        1     Full/DR         46.123  eth2       10.10.0.11
+bird> jchauhan@scoobydoo:~/bird_conf/frrouting_automation$ docker exec -it router3 birdc
+BIRD 2.0.7 ready.
+bird> show ospf neighbor
+MyOSPF:
+Router ID       Pri          State      DTime   Interface  Router IP
+10.10.0.3         1     Full/BDR        45.127  eth1       10.10.0.10
+10.10.0.19        1     Full/DR         42.859  eth2       10.10.0.19
+bird> jchauhan@scoobydoo:~/bird_conf/frrouting_automation$ docker exec -it router4 birdc
+BIRD 2.0.7 ready.
+bird> show ospf neighbor
+MyOSPF:
+Router ID       Pri          State      DTime   Interface  Router IP
+10.10.0.11        1     Full/BDR        49.063  eth1       10.10.0.18
