@@ -34,20 +34,24 @@ def triangle(fname):
         while peek_line(file):
             line = file.readline()
             if "Time Stamp" in line:
-                line = line.strip("Time Stamp")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Time Stamp")
                 time = line
             elif "Source: 10" in line:
-                line = line.strip("Source: ")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Source: ")
                 inter = line
             elif "Message Type" in line:
-                line = line.strip("Message Type: ")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Message Type: ")
                 message = line
             elif "Source OSPF Router" in line:
-                line = line.strip("Source OSPF Router: ")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Source OSPF Router: ")
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
@@ -180,20 +184,24 @@ def double(fname):
         while peek_line(file):
             line = file.readline()
             if "Time Stamp" in line:
-                line = line.strip("Time Stamp")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Time Stamp")
                 time = line
             elif "Source: 10" in line:
-                line = line.strip("Source: ")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Source: ")
                 inter = line
             elif "Message Type" in line:
-                line = line.strip("Message Type: ")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Message Type: ")
                 message = line
             elif "Source OSPF Router" in line:
-                line = line.strip("Source OSPF Router: ")
                 line = line.strip("\n")
+                line = line.strip('\t')
+                line = line.strip("Source OSPF Router: ")
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
@@ -695,19 +703,22 @@ def run(final_result):
 
 
 def main():
-    result1 = triangle('lb800_1_3.txt')
-    result2 = triangle('lb800_2_3.txt')
-    result3 = double('lb1000_1_2.txt')
-    #
-    result4 = triangle('lb800_3_3.txt')
-    result5 = triangle('lb800_3_3.txt')
-    result6 = double('lb1000_2_2.txt')
-    result7 = star('bstar_1000.txt')
-    result8 = linear('blinear_1000.txt')
-    final_result = [result1,result2,result3,result4,result5,result6,result7,result8]
-    #
+    final_result = []
+    files3 = ['lb800_1_3.txt','lb800_2_3.txt','lb800_3_3.txt','lb800_4_3.txt']
+
+    for input_file3 in files3:
+        final_result.append(triangle(input_file3))
+
+    files2 = ['lb1000_2_2.txt','lb1000_1_2.txt']
+    for input_file2 in files2:
+        final_result.append(double(input_file2))
+
+    final_result.append(star('bstar_1000.txt'))
+    final_result.append(linear('blinear_1000.txt'))
+
     run(final_result)
 main()
+
 #DB Description (2)
 #LS Update (4)
 #LS Request (3)
