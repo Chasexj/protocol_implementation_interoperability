@@ -706,7 +706,7 @@ def main():
     'l800_5_3.txt','l800_6_3.txt','l800_7_3.txt',
     'l800_8_3.txt','l800_9_3.txt','l800_10_3.txt',
     'l800_11_3.txt','l800_12_3.txt','l800_13_3.txt',
-    'l800_14_3.txt','l800_15_3.txt','l800_16_3.txt',]
+    'l800_14_3.txt','l800_15_3.txt','l800_16_3.txt']
 
     for input_file3 in files3:
         final_result.append(triangle(input_file3))
@@ -715,7 +715,8 @@ def main():
     'l1000_4_2.txt','l1000_5_2.txt','l1000_6_2.txt',
     'l1000_7_2.txt','l1000_8_2.txt','l1000_9_2.txt',
     'l1000_10_2.txt','l1000_11_2.txt','l1000_12_2.txt',
-    'l1000_13_2.txt','l1000_14_2.txt','l1000_15_2.txt']
+    'l1000_13_2.txt','l1000_14_2.txt','l1000_15_2.txt',
+    'l1000_16_2.txt']
     for input_file2 in files2:
         final_result.append(double(input_file2))
 

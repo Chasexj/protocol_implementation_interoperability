@@ -23,7 +23,7 @@ def triangle(fname):
     src_router = ""
     des_router = ""
     message = ""
-    recv ={"10.10.0.210.10.0.2":"10.10.0.3","10.10.0.210.10.0.18":"10.10.0.11","10.10.0.310.10.0.3":"10.10.0.2","10.10.0.310.10.0.10":"10.10.0.11","10.10.0.1110.10.0.11":"10.10.0.3","10.10.0.1110.10.0.19":"10.10.0.2"}
+    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.210.10.0.18":"172.17.0.4","172.17.0.310.10.0.3":"172.17.0.2","172.17.0.310.10.0.10":"172.17.0.4","172.17.0.410.10.0.11":"172.17.0.3","172.17.0.410.10.0.19":"172.17.0.2"}
     #r1 = 172.17.0.2
     r1 = []
     #r2 = 172.17.0.3
@@ -55,19 +55,19 @@ def triangle(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
-                if src_router == "10.10.0.2":
+                if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "10.10.0.3":
+                elif src_router == "172.17.0.3":
                     r2.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "10.10.0.11":
+                elif src_router == "172.17.0.4":
                     r3.append(message+"Send at "+time + " to " + des_router )
                 
-                if des_router == "10.10.0.2":
+                if des_router == "172.17.0.2":
                     r1.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "10.10.0.3":
+                elif des_router == "172.17.0.3":
                     r2.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "10.10.0.11":
-                    r3.append(message+"Receive at "+time + " from " +src_router)\
+                elif des_router == "172.17.0.4":
+                    r3.append(message+"Receive at "+time + " from " +src_router)
 
     r1_send_if_recv =defaultdict(set)
     r1_recv_if_send =defaultdict(set)
@@ -97,9 +97,9 @@ def triangle(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r1_receive.remove(recv_item)
-                if send_to == "10.10.0.3":
+                if send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r1_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -129,9 +129,9 @@ def triangle(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r2_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r2_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -160,12 +160,13 @@ def triangle(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r3_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.3":
+                elif send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r3_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
+    
     result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv]
     return result
 
@@ -174,7 +175,7 @@ def double(fname):
     src_router = ""
     des_router = ""
     message = ""
-    recv ={"10.10.0.210.10.0.2":"10.10.0.3","10.10.0.310.10.0.3":"10.10.0.2"}
+    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.310.10.0.3":"172.17.0.2"}
     #r1 = 172.17.0.2
     r1 = []
     #r2 = 172.17.0.3
@@ -205,14 +206,14 @@ def double(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
-                if src_router == "10.10.0.2":
+                if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "10.10.0.3":
+                elif src_router == "172.17.0.3":
                     r2.append(message+"Send at "+time + " to " + des_router)
                 
-                if des_router == "10.10.0.2":
+                if des_router == "172.17.0.2":
                     r1.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "10.10.0.3":
+                elif des_router == "172.17.0.3":
                     r2.append(message+"Receive at "+time + " from " +src_router)
     r1_send_if_recv =defaultdict(set)
     r1_recv_if_send =defaultdict(set)
@@ -241,7 +242,7 @@ def double(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r1_receive.remove(recv_item)
-                if send_to == "10.10.0.3":
+                if send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r1_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -271,7 +272,7 @@ def double(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r2_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r2_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -284,18 +285,15 @@ def star(fname):
     src_router = ""
     des_router = ""
     message = ""
-    recv ={"10.10.0.310.10.0.3":"10.10.0.2",
-    "10.10.0.1110.10.0.11":"10.10.0.2",
-    "10.10.0.1910.10.0.19":"10.10.0.2",
-    "10.10.0.210.10.0.2":"10.10.0.3",
-    "10.10.0.210.10.0.10":"10.10.0.11",
-    "10.10.0.210.10.0.18":"10.10.0.19"}
+    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.210.10.0.10":"172.17.0.4","172.17.0.210.10.0.18":"172.17.0.5","172.17.0.310.10.0.3":"172.17.0.2","172.17.0.410.10.0.11":"172.17.0.2","172.17.0.510.10.0.19":"172.17.0.2"}
+
     #r1 = 172.17.0.2
     r1 = []
     #r2 = 172.17.0.3
     r2 = []
     #r3 = 172.17.0.4
     r3 = []
+    #r4 = 172.17.0.5
     r4 = []
     with open (fname) as file:
         while peek_line(file):
@@ -318,23 +316,23 @@ def star(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
-                if src_router == "10.10.0.2":
+                if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "10.10.0.3":
+                elif src_router == "172.17.0.3":
                     r2.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "10.10.0.11":
+                elif src_router == "172.17.0.4":
                     r3.append(message+"Send at "+time + " to " + des_router )
-                elif src_router == "10.10.0.19":
+                elif src_router == "172.17.0.5":
                     r4.append(message+"Send at "+time + " to " + des_router )
                 
-                if des_router == "10.10.0.2":
+                if des_router == "172.17.0.2":
                     r1.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "10.10.0.3":
+                elif des_router == "172.17.0.3":
                     r2.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "10.10.0.11":
+                elif des_router == "172.17.0.4":
                     r3.append(message+"Receive at "+time + " from " +src_router)
-                elif src_router == "10.10.0.19":
-                    r4.append(message+"Send at "+time + " to " + des_router )
+                elif des_router == "172.17.0.5":
+                    r4.append(message+"Receive at "+time + " from " +src_router)
 
     r1_send_if_recv =defaultdict(set)
     r1_recv_if_send =defaultdict(set)
@@ -366,11 +364,11 @@ def star(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r1_receive.remove(recv_item)
-                if send_to == "10.10.0.3":
+                if send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.19":
+                elif send_to == "172.17.0.5":
                     r4_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r1_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -400,11 +398,11 @@ def star(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r2_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.19":
+                elif send_to == "172.17.0.5":
                     r4_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r2_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -433,11 +431,11 @@ def star(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r3_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.3":
+                elif send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.19":
+                elif send_to == "172.17.0.5":
                     r4_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r3_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -445,7 +443,7 @@ def star(fname):
 
     r4_send = []
     r4_receive = []
-    for item in reversed(r3):
+    for item in reversed(r4):
         if 'Send' in item:
             r4_send.append(item)
         else:
@@ -465,15 +463,16 @@ def star(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r4_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.3":
+                elif send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r4_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
-    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv]
+    
+    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv,r4_recv_if_send, r4_send_if_recv]
     return result
 
 def linear(fname):
@@ -481,18 +480,15 @@ def linear(fname):
     src_router = ""
     des_router = ""
     message = ""
-    recv ={"10.10.0.310.10.0.3":"10.10.0.2",
-    "10.10.0.210.10.0.2":"10.10.0.3",
-    "10.10.0.1110.10.0.11":"10.10.0.3",
-    "10.10.0.310.10.0.10":"10.10.0.11",
-    "10.10.0.1910.10.0.19":"10.10.0.11",
-    "10.10.0.1110.10.0.18":"10.10.0.19"}
+    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.310.10.0.3":"172.17.0.2","172.17.0.310.10.0.10":"172.17.0.4","172.17.0.410.10.0.11":"172.17.0.3","172.17.0.410.10.0.18":"172.17.0.5","172.17.0.510.10.0.19":"172.17.0.4"}
+
     #r1 = 172.17.0.2
     r1 = []
     #r2 = 172.17.0.3
     r2 = []
     #r3 = 172.17.0.4
     r3 = []
+    #r4 = 172.17.0.5
     r4 = []
     with open (fname) as file:
         while peek_line(file):
@@ -515,23 +511,23 @@ def linear(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
-                if src_router == "10.10.0.2":
+                if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "10.10.0.3":
+                elif src_router == "172.17.0.3":
                     r2.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "10.10.0.11":
+                elif src_router == "172.17.0.4":
                     r3.append(message+"Send at "+time + " to " + des_router )
-                elif src_router == "10.10.0.19":
+                elif src_router == "172.17.0.5":
                     r4.append(message+"Send at "+time + " to " + des_router )
                 
-                if des_router == "10.10.0.2":
+                if des_router == "172.17.0.2":
                     r1.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "10.10.0.3":
+                elif des_router == "172.17.0.3":
                     r2.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "10.10.0.11":
+                elif des_router == "172.17.0.4":
                     r3.append(message+"Receive at "+time + " from " +src_router)
-                elif src_router == "10.10.0.19":
-                    r4.append(message+"Send at "+time + " to " + des_router )
+                elif des_router == "172.17.0.5":
+                    r4.append(message+"Receive at "+time + " from " +src_router)
 
     r1_send_if_recv =defaultdict(set)
     r1_recv_if_send =defaultdict(set)
@@ -563,11 +559,11 @@ def linear(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r1_receive.remove(recv_item)
-                if send_to == "10.10.0.3":
+                if send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.19":
+                elif send_to == "172.17.0.5":
                     r4_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r1_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -597,11 +593,11 @@ def linear(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r2_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.19":
+                elif send_to == "172.17.0.5":
                     r4_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r2_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -630,11 +626,11 @@ def linear(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r3_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.3":
+                elif send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.19":
+                elif send_to == "172.17.0.5":
                     r4_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r3_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
@@ -642,7 +638,7 @@ def linear(fname):
 
     r4_send = []
     r4_receive = []
-    for item in reversed(r3):
+    for item in reversed(r4):
         if 'Send' in item:
             r4_send.append(item)
         else:
@@ -662,15 +658,16 @@ def linear(fname):
                 send_packet = re.search('(.*)Send at', send_item)
                 recv_packet = re.search('(.*)Receive at', recv_item)
                 r4_receive.remove(recv_item)
-                if send_to == "10.10.0.2":
+                if send_to == "172.17.0.2":
                     r1_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.3":
+                elif send_to == "172.17.0.3":
                     r2_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
-                elif send_to == "10.10.0.11":
+                elif send_to == "172.17.0.4":
                     r3_send_if_recv[recv_packet.group(1)].add(send_packet.group(1))
                 r4_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
-    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv]
+    
+    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv,r4_recv_if_send, r4_send_if_recv]
     return result
 
 def run(final_result):
@@ -704,29 +701,22 @@ def run(final_result):
 
 def main():
     final_result = []
-    files3 = ['lb800_1_3.txt','lb800_2_3.txt','lb800_3_3.txt','lb800_4_3.txt',
-    'lb800_5_3.txt','lb800_6_3.txt','lb800_7_3.txt','lb800_8_3.txt',
-    'lb800_9_3.txt','lb800_10_3.txt','lb800_11_3.txt','lb800_12_3.txt',
-    'lb800_13_3.txt','lb800_14_3.txt','lb800_15_3.txt','lb800_16_3.txt']
+    files3 = ['l800_1_3.txt',
+    'l800_2_3.txt','l800_3_3.txt','l800_4_3.txt']
 
     for input_file3 in files3:
         final_result.append(triangle(input_file3))
 
-    files2 = ['lb1000_2_2.txt','lb1000_1_2.txt','lb1000_3_2.txt',
-    'lb1000_4_2.txt','lb1000_5_2.txt','lb1000_6_2.txt',
-    'lb1000_7_2.txt','lb1000_8_2.txt','lb1000_9_2.txt',
-    'lb1000_10_2.txt','lb1000_11_2.txt','lb1000_12_2.txt',
-    'lb1000_13_2.txt','lb1000_14_2.txt','lb1000_15_2.txt',
-    'lb1000_16_2.txt']
+    files2 = ['l1000_2_2.txt','l1000_1_2.txt','l1000_3_2.txt',
+    'l1000_4_2.txt']
     for input_file2 in files2:
         final_result.append(double(input_file2))
 
-    final_result.append(star('bstar_1000.txt'))
-    final_result.append(linear('blinear_1000.txt'))
+    #final_result.append(star('star_1000.txt'))
+    #final_result.append(linear('linear_1000.txt'))
 
     run(final_result)
 main()
-
 #DB Description (2)
 #LS Update (4)
 #LS Request (3)

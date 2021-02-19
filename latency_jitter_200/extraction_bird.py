@@ -704,25 +704,18 @@ def run(final_result):
 
 def main():
     final_result = []
-    files3 = ['lb800_1_3.txt','lb800_2_3.txt','lb800_3_3.txt','lb800_4_3.txt',
-    'lb800_5_3.txt','lb800_6_3.txt','lb800_7_3.txt','lb800_8_3.txt',
-    'lb800_9_3.txt','lb800_10_3.txt','lb800_11_3.txt','lb800_12_3.txt',
-    'lb800_13_3.txt','lb800_14_3.txt','lb800_15_3.txt','lb800_16_3.txt']
+    files3 = ['lb800_1_3.txt','lb800_2_3.txt','lb800_3_3.txt','lb800_4_3.txt']
 
     for input_file3 in files3:
         final_result.append(triangle(input_file3))
 
     files2 = ['lb1000_2_2.txt','lb1000_1_2.txt','lb1000_3_2.txt',
-    'lb1000_4_2.txt','lb1000_5_2.txt','lb1000_6_2.txt',
-    'lb1000_7_2.txt','lb1000_8_2.txt','lb1000_9_2.txt',
-    'lb1000_10_2.txt','lb1000_11_2.txt','lb1000_12_2.txt',
-    'lb1000_13_2.txt','lb1000_14_2.txt','lb1000_15_2.txt',
-    'lb1000_16_2.txt']
+    'lb1000_4_2.txt']
     for input_file2 in files2:
         final_result.append(double(input_file2))
 
-    final_result.append(star('bstar_1000.txt'))
-    final_result.append(linear('blinear_1000.txt'))
+    #final_result.append(star('bstar_1000.txt'))
+    #final_result.append(linear('blinear_1000.txt'))
 
     run(final_result)
 main()
