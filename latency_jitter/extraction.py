@@ -55,6 +55,42 @@ def triangle(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
+                #############
+                if message == "LS Update (4)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message + "/AR"+ARline + "SN"+SNline
+                        else:
+                            break
+                elif message == "LS Acknowledge (5)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message +"/AR"+ARline+"SN"+SNline
+                        else:
+                            break
+                #############
                 if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
                 elif src_router == "172.17.0.3":
@@ -206,6 +242,42 @@ def double(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
+                                #############
+                if message == "LS Update (4)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message + "/AR"+ARline + "SN"+SNline
+                        else:
+                            break
+                elif message == "LS Acknowledge (5)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message +"/AR"+ARline+"SN"+SNline
+                        else:
+                            break
+                #############
                 if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
                 elif src_router == "172.17.0.3":
@@ -686,17 +758,19 @@ def run(final_result):
                     for item2 in r_send_if_recv[item]:
                         send_dict[item].add(item2)
 
-    print("List of packets can be received given last sent packet type")
-    for key in recv_dict:
-        print(key)
-        print(recv_dict[key])
-        print("\n")
-    print("-------------------------------------------------------------------")
-    print("List of packets can be send given last received packet type")
-    for key in send_dict:
-        print(key)
-        print(send_dict[key])
-        print("\n")
+    with open ('extraction_output.txt', 'w') as f:
+        f.write("List of packets can be received given last sent packet type\n")
+        for key in recv_dict:
+            f.write(key+"\n")
+            f.write(str(recv_dict[key])+"\n")
+            f.write("\n")
+        f.write("###########################################################################################################################################################\n")
+        f.write("\n")
+        f.write("List of packets can be send given last received packet type\n")
+        for key in send_dict:
+            f.write(key+"\n")
+            f.write(str(send_dict[key])+"\n")
+            f.write("\n")
 
 
 def main():
@@ -707,7 +781,7 @@ def main():
     'l800_8_3.txt','l800_9_3.txt','l800_10_3.txt',
     'l800_11_3.txt','l800_12_3.txt','l800_13_3.txt',
     'l800_14_3.txt','l800_15_3.txt','l800_16_3.txt']
-
+    #files3 = ['l800_1_3.txt']
     for input_file3 in files3:
         final_result.append(triangle(input_file3))
 
@@ -720,8 +794,8 @@ def main():
     for input_file2 in files2:
         final_result.append(double(input_file2))
 
-    final_result.append(star('star_1000.txt'))
-    final_result.append(linear('linear_1000.txt'))
+    #final_result.append(star('star_1000.txt'))
+    #final_result.append(linear('linear_1000.txt'))
 
     run(final_result)
 main()

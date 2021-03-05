@@ -55,6 +55,42 @@ def triangle(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
+                                #############
+                if message == "LS Update (4)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message + "/AR"+ARline + "SN"+SNline
+                        else:
+                            break
+                elif message == "LS Acknowledge (5)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message +"/AR"+ARline+"SN"+SNline
+                        else:
+                            break
+                #############
                 if src_router == "10.10.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
                 elif src_router == "10.10.0.3":
@@ -318,6 +354,42 @@ def star(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
+                                #############
+                if message == "LS Update (4)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message + "/AR"+ARline + "SN"+SNline
+                        else:
+                            break
+                elif message == "LS Acknowledge (5)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            if "Advertising Router" in line:
+                                ARline = line.strip("\n")
+                                ARline = ARline.strip('\t')
+                                ARline = ARline.strip("Advertising Router: ")
+                                #message = message + "/AR"+ARline
+                            elif "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "/AR"+ARline + "SN"+SNline not in message:
+                                    message = message +"/AR"+ARline+"SN"+SNline
+                        else:
+                            break
+                #############
                 if src_router == "10.10.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
                 elif src_router == "10.10.0.3":
@@ -689,17 +761,19 @@ def run(final_result):
                     for item2 in r_send_if_recv[item]:
                         send_dict[item].add(item2)
 
-    print("List of packets can be received given last sent packet type")
-    for key in recv_dict:
-        print(key)
-        print(recv_dict[key])
-        print("\n")
-    print("-------------------------------------------------------------------")
-    print("List of packets can be send given last received packet type")
-    for key in send_dict:
-        print(key)
-        print(send_dict[key])
-        print("\n")
+    with open ('extraction_bird_output.txt', 'w') as f:
+        f.write("List of packets can be received given last sent packet type\n")
+        for key in recv_dict:
+            f.write(key+"\n")
+            f.write(str(recv_dict[key])+"\n")
+            f.write("\n")
+        f.write("###########################################################################################################################################################\n")
+        f.write("\n")
+        f.write("List of packets can be send given last received packet type\n")
+        for key in send_dict:
+            f.write(key+"\n")
+            f.write(str(send_dict[key])+"\n")
+            f.write("\n")
 
 
 def main():
