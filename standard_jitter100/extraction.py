@@ -141,27 +141,28 @@ def run(final_result):
                         last_receive = msg
 
 
-    print("List of packets can be received given last sent packet type")
-    for key in recv_dict:
-        print(key)
-        print(recv_dict[key])
-        frequency = ""
-        for value in recv_dict[key]:
-            pair = key + value
-            frequency = frequency + str(recv_dict_counter[pair]) + "/"
-        print(frequency)
-        print("\n")
-    print("-------------------------------------------------------------------")
-    print("List of packets can be send given last received packet type")
-    for key in send_dict:
-        print(key)
-        print(send_dict[key])
-        frequency = ""
-        for value in send_dict[key]:
-            pair = key + value
-            frequency = frequency + str(send_dict_counter[pair]) + "/"
-        print(frequency)
-        print("\n")
+    with open ('extraction_output.txt', 'w') as f:
+        f.write("List of packets can be received given last sent packet type"+"\n")
+        for key in recv_dict:
+            f.write(key+"\n")
+            f.write(str(recv_dict[key])+"\n")
+            frequency = ""
+            for value in recv_dict[key]:
+                pair = key + value
+                frequency = frequency + str(recv_dict_counter[pair]) + "/"
+            f.write(frequency+"\n")
+            f.write("\n")
+        f.write("###########################################################################################################################################################\n")
+        f.write("List of packets can be send given last received packet type"+"\n")
+        for key in send_dict:
+            f.write(key+"\n")
+            f.write(str(send_dict[key])+"\n")
+            frequency = ""
+            for value in send_dict[key]:
+                pair = key + value
+                frequency = frequency + str(send_dict_counter[pair]) + "/"
+            f.write(frequency+"\n")
+            f.write("\n")
 
 def main():
 
