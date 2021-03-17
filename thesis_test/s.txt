@@ -1,17 +1,35 @@
-DB Description (2)Send at 1607588029.598773000 to 10.10.0.3
-DB Description (2)Send at 1607588029.598784000 to 10.10.0.3
-DB Description (2)Send at 1607588029.598943000 to 10.10.0.3
-DB Description (2)Send at 1607588029.598952000 to 10.10.0.3
-LS Request (3)Send at 1607588029.598983000 to 10.10.0.3
-LS Request (3)Send at 1607588029.598990000 to 10.10.0.3
-LS Update (4)Send at 1607588029.599037000 to 10.10.0.3
-LS Update (4)Send at 1607588029.599046000 to 10.10.0.3
-LS Update (4)Send at 1607588030.187915000 to 10.10.0.3
-LS Update (4)Send at 1607588030.187934000 to 10.10.0.3
-LS Update (4)Send at 1607588030.187915000 to 10.10.0.3
-LS Acknowledge (5)Send at 1607588032.093526000 to 10.10.0.3
-LS Acknowledge (5)Send at 1607588032.093545000 to 10.10.0.3
-LS Acknowledge (5)Send at 1607588032.093526000 to 10.10.0.3
-Hello Packet (1)Send at 1607588036.089341000 to 10.10.0.3
-Hello Packet (1)Send at 1607588036.089360000 to 10.10.0.3
-Hello Packet (1)Send at 1607588036.089341000 to 10.10.0.3
+/Hello Packet (1)SendDB Description (2)Send54
+/Hello Packet (1)SendHello Packet (1)Send777
+/Hello Packet (1)SendLS Acknowledge (5)Send28
+/Hello Packet (1)SendLS Update (4)Send24
+/Hello Packet (1)SendLS Request (3)Send3
+
+/DB Description (2)SendDB Description (2)Send231
+/DB Description (2)SendLS Request (3)Send61
+/DB Description (2)SendLS Update (4)Send14
+/DB Description (2)SendHello Packet (1)Send18
+
+/LS Request (3)SendLS Request (3)Send88
+/LS Request (3)SendLS Update (4)Send63
+/LS Request (3)SendDB Description (2)Send13
+/LS Request (3)SendLS Acknowledge (5)Send4
+/LS Request (3)SendHello Packet (1)Send4
+/
+
+/LS Update (4)SendLS Update (4)Send832
+/LS Update (4)SendLS Acknowledge (5)Send99
+/LS Update (4)SendDB Description (2)Send11
+/LS Update (4)SendHello Packet (1)Send8
+/LS Update (4)SendLS Request (3)Send9
+
+/LS Acknowledge (5)SendLS Acknowledge (5)Send336
+/LS Acknowledge (5)SendDB Description (2)Send15
+/LS Acknowledge (5)SendLS Update (4)Send38
+/LS Acknowledge (5)SendHello Packet (1)Send35
+/LS Acknowledge (5)SendLS Request (3)Send13
+
+[[0.8769751693002258, 0.060948081264108354, 0.003386004514672686, 0.02708803611738149, 0.03160270880361174], 
+[0.05555555555555555, 0.7129629629629629, 0.1882716049382716, 0.043209876543209874, 0.0], 
+[0.023255813953488372, 0.0755813953488372, 0.5116279069767442, 0.36627906976744184, 0.023255813953488372], 
+[0.008342022940563087, 0.011470281543274244, 0.009384775808133473, 0.867570385818561, 0.1032325338894682], 
+[0.08009153318077804, 0.034324942791762014, 0.029748283752860413, 0.08695652173913043, 0.7688787185354691]]

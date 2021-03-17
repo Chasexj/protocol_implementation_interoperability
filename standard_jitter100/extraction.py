@@ -114,6 +114,9 @@ def run(final_result):
     recv_dict = defaultdict(set)
     send_dict_counter = Counter()
     recv_dict_counter = Counter()
+    #################3
+    s_transition_p = Counter()
+    ##################3
     for i in range(len(final_result)):
         for j in range(len(final_result[i])):
             r = final_result[i][j]
@@ -127,7 +130,11 @@ def run(final_result):
                         recv_dict[last_send.strip("Send")].add(msg.strip("Receive"))
                         recv_dict_counter[last_send.strip("Send")+msg.strip("Receive")]+=1
                     elif "Send" in msg:
+                        ###################4
+                        ss_pair = last_send+msg
                         last_send = msg
+                        s_transition_p[ss_pair]+=1
+                        ###################4
             last_receive = ""
             for msg in r:
                 if r.index(msg) == 0:
@@ -142,16 +149,42 @@ def run(final_result):
 
 
     with open ('extraction_output.txt', 'w') as f:
+        ###########################1
+        f.write("transition_p\n")
+        for ss_p in s_transition_p:
+            f.write(ss_p)
+            f.write(str(s_transition_p[ss_p])+"\n")
+            f.write("/")
+        f.write("\n")
+        ##############################1
         f.write("List of packets can be received given last sent packet type"+"\n")
+        ###########################################5
+        overall_total = 0
+        total_list = []
+        #############################################5
         for key in recv_dict:
             f.write(key+"\n")
             f.write(str(recv_dict[key])+"\n")
             frequency = ""
+            ################2
+            total = 0
             for value in recv_dict[key]:
                 pair = key + value
-                frequency = frequency + str(recv_dict_counter[pair]) + "/"
+                total = total+recv_dict_counter[pair]
+                overall_total = overall_total+recv_dict_counter[pair]
+            ################2
+            for value in recv_dict[key]:
+                pair = key + value
+                frequency = frequency + str(recv_dict_counter[pair]/total) + "/"
             f.write(frequency+"\n")
             f.write("\n")
+            total_list.append(total)
+        ###############5
+        f.write("start_p\n")
+        for send_recv_total in total_list:
+            f.write(str(send_recv_total/overall_total)+"/")
+        f.write("\n\n")
+        ###############5
         f.write("###########################################################################################################################################################\n")
         f.write("List of packets can be send given last received packet type"+"\n")
         for key in send_dict:
