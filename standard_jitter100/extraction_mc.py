@@ -229,6 +229,12 @@ def run(final_result):
     # plt.subplots.figure = plot_graph(mc)[1]
     # plt.savefig("figure.png")
 
+
+### 88 89 99 100
+#AR 0  1  1  0
+#SN 0  1  2  1
+#incremental to scale comparsion
+###
 def main():
 
     final_result = []

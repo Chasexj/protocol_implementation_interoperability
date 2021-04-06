@@ -1,0 +1,18 @@
+Observed packets with intersecting advertising router sets:
+LS Update (4) Send|LS Acknowledge (5) Receive
+LS Update (4) Receive|LS Update (4) Send
+LS Update (4) Send|LS Update (4) Receive
+LS Update (4) Send|LS Acknowledge (5) Send
+LS Update (4) Receive|LS Acknowledge (5) Receive
+LS Update (4) Receive|LS Update (4) Receive
+LS Update (4) Send|LS Update (4) Send
+LS Update (4) Receive|LS Acknowledge (5) Send
+LS Acknowledge (5) Receive|LS Acknowledge (5) Receive
+LS Acknowledge (5) Receive|LS Acknowledge (5) Send
+LS Acknowledge (5) Send|LS Acknowledge (5) Receive
+LS Acknowledge (5) Send|LS Acknowledge (5) Send
+LS Acknowledge (5) Receive|LS Update (4) Receive
+LS Acknowledge (5) Send|LS Update (4) received
+
+LSA Receive LSU Send
+LSA Send LSU Send
