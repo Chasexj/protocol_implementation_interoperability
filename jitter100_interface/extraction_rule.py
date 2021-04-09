@@ -61,12 +61,19 @@ def triangle(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
-                #############
                 if message == "LS Update (4)":
                     while peek_line(file):
                         line = file.readline()
                         if "~" not in line:
-                            if "Advertising Router" in line:
+                            if "LS Type" in line:
+                                LSTline = line.strip("\n")
+                                LSTline = LSTline.strip('\t')
+                                LSTline = LSTline.strip("LS Type: ")
+                            elif "Link State ID: " in line:
+                                LSIDline = line.strip("\n")
+                                LSIDline = LSIDline.strip('\t')
+                                LSIDline = LSIDline.strip("Link State ID: ")
+                            elif "Advertising Router" in line:
                                 ARline = line.strip("\n")
                                 ARline = ARline.strip('\t')
                                 ARline = ARline.strip("Advertising Router: ")
@@ -75,14 +82,22 @@ def triangle(fname):
                                 SNline = SNline.strip('\t')
                                 SNline = SNline.strip("Sequence Number: ")
                                 if "/AR"+ARline + "SN"+SNline not in message:
-                                    message = message + "/AR"+ARline + "SN"+SNline
+                                    message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
                         else:
                             break
                 elif message == "LS Acknowledge (5)":
                     while peek_line(file):
                         line = file.readline()
                         if "~" not in line:
-                            if "Advertising Router" in line:
+                            if "LS Type" in line:
+                                LSTline = line.strip("\n")
+                                LSTline = LSTline.strip('\t')
+                                LSTline = LSTline.strip("LS Type: ")
+                            elif "Link State ID: " in line:
+                                LSIDline = line.strip("\n")
+                                LSIDline = LSIDline.strip('\t')
+                                LSIDline = LSIDline.strip("Link State ID: ")
+                            elif "Advertising Router" in line:
                                 ARline = line.strip("\n")
                                 ARline = ARline.strip('\t')
                                 ARline = ARline.strip("Advertising Router: ")
@@ -91,10 +106,9 @@ def triangle(fname):
                                 SNline = SNline.strip('\t')
                                 SNline = SNline.strip("Sequence Number: ")
                                 if "/AR"+ARline + "SN"+SNline not in message:
-                                    message = message +"/AR"+ARline+"SN"+SNline
+                                    message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
                         else:
                             break
-                #############
                 if src_router == "172.17.0.3":
                     r1.append(message+"Send")
                 elif src_router == "172.17.0.4":
@@ -146,7 +160,15 @@ def double(fname):
                     while peek_line(file):
                         line = file.readline()
                         if "~" not in line:
-                            if "Advertising Router" in line:
+                            if "LS Type" in line:
+                                LSTline = line.strip("\n")
+                                LSTline = LSTline.strip('\t')
+                                LSTline = LSTline.strip("LS Type: ")
+                            elif "Link State ID: " in line:
+                                LSIDline = line.strip("\n")
+                                LSIDline = LSIDline.strip('\t')
+                                LSIDline = LSIDline.strip("Link State ID: ")
+                            elif "Advertising Router" in line:
                                 ARline = line.strip("\n")
                                 ARline = ARline.strip('\t')
                                 ARline = ARline.strip("Advertising Router: ")
@@ -155,14 +177,22 @@ def double(fname):
                                 SNline = SNline.strip('\t')
                                 SNline = SNline.strip("Sequence Number: ")
                                 if "/AR"+ARline + "SN"+SNline not in message:
-                                    message = message + "/AR"+ARline + "SN"+SNline
+                                    message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
                         else:
                             break
                 elif message == "LS Acknowledge (5)":
                     while peek_line(file):
                         line = file.readline()
                         if "~" not in line:
-                            if "Advertising Router" in line:
+                            if "LS Type" in line:
+                                LSTline = line.strip("\n")
+                                LSTline = LSTline.strip('\t')
+                                LSTline = LSTline.strip("LS Type: ")
+                            elif "Link State ID: " in line:
+                                LSIDline = line.strip("\n")
+                                LSIDline = LSIDline.strip('\t')
+                                LSIDline = LSIDline.strip("Link State ID: ")
+                            elif "Advertising Router" in line:
                                 ARline = line.strip("\n")
                                 ARline = ARline.strip('\t')
                                 ARline = ARline.strip("Advertising Router: ")
@@ -171,7 +201,7 @@ def double(fname):
                                 SNline = SNline.strip('\t')
                                 SNline = SNline.strip("Sequence Number: ")
                                 if "/AR"+ARline + "SN"+SNline not in message:
-                                    message = message +"/AR"+ARline+"SN"+SNline
+                                    message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
                         else:
                             break
                 #############
@@ -218,24 +248,24 @@ def run(final_result):
         for j in node_list:
             if i+"|||"+j in final_frequency:
                 p[node_list.index(i)][node_list.index(j)]=final_frequency[i+"|||"+j]
-    ##node_list rename, save_correspondance to default_dict
-    symbol_packet_pair = defaultdict()
-    symbol = 0
-    print("Converting packet name to symbol...")
-    for i in range(len(node_list)):
-        symbol_packet_pair[str(symbol)]=node_list[i]
-        node_list[i]=str(symbol)
-        symbol = symbol+1
-    print("Writing out symbol_packet_pair...")
-    with open ('extraction_symbol_packet_pair.txt', 'w') as f:
-        for i in symbol_packet_pair:
-            f.write(i+"   :   "+symbol_packet_pair[i]+"\n")
-    print("Creating markov chain...")
-    mc = MarkovChain(p, node_list)
-    print("Plotting MC...")
-    plt.figure.Figure = plot_graph(mc)[0]
-    plt.subplots.figure = plot_graph(mc)[1]
-    plt.savefig("figure.png")
+    # #node_list rename, save_correspondance to default_dict
+    # symbol_packet_pair = defaultdict()
+    # symbol = 0
+    # print("Converting packet name to symbol...")
+    # for i in range(len(node_list)):
+    #     symbol_packet_pair[str(symbol)]=node_list[i]
+    #     node_list[i]=str(symbol)
+    #     symbol = symbol+1
+    # print("Writing out symbol_packet_pair...")
+    # with open ('extraction_symbol_packet_pair.txt', 'w') as f:
+    #     for i in symbol_packet_pair:
+    #         f.write(i+"   :   "+symbol_packet_pair[i]+"\n")
+    # print("Creating markov chain...")
+    # mc = MarkovChain(p, node_list)
+    # print("Plotting MC...")
+    # plt.figure.Figure = plot_graph(mc)[0]
+    # plt.subplots.figure = plot_graph(mc)[1]
+    # plt.savefig("figure.png")
 
 def rule_extraction(final_frequency):
     print("Extracting rules...")
@@ -250,6 +280,8 @@ def rule_extraction(final_frequency):
     
     #rules
     found_ar_rule = set()
+    found_lst_rule = set()
+    found_lsid_rule = set()
     for i in investigating:
         #finding the needed field values
         first_packet = i.split("|||")[0]
@@ -257,27 +289,48 @@ def rule_extraction(final_frequency):
         #ar values
         first_packet_ar = re.findall(r'AR(.*?)SN', first_packet,re.DOTALL)
         second_packet_ar = re.findall(r'AR(.*?)SN', second_packet,re.DOTALL)
+        #lst values
+        first_packet_lst = re.findall(r'LST(.*?)LSID', first_packet,re.DOTALL)
+        second_packet_lst = re.findall(r'LST(.*?)LSID', second_packet,re.DOTALL)
+        #lsid values
+        first_packet_lsid = re.findall(r'LSID(.*?)AR', first_packet,re.DOTALL)
+        second_packet_lsid = re.findall(r'LSID(.*?)AR', second_packet,re.DOTALL)
         # #prints out all intersections
         # print(first_packet_ar)
         # print(second_packet_ar)
         # print(list(set(first_packet_ar) & set(second_packet_ar)))
+        if "Send" in first_packet:
+            first_packet_id = first_packet.split('/')[0] + " Send"
+        else:
+            first_packet_id = first_packet.split('/')[0] + " Receive"
+        if "Send" in second_packet:
+            second_packet_id = second_packet.split('/')[0] + " Send"
+        else:
+            second_packet_id = second_packet.split('/')[0] + " Receive"
 
         #identifying packets types/id for packets with intersection, more conditions can be added to add specification
+        if len(list(set(first_packet_lst) & set(second_packet_lst)))>=1:
+            found_lst_rule.add(first_packet_id + "|" + second_packet_id)
+        if len(list(set(first_packet_lsid) & set(second_packet_lsid)))>=1:
+            found_lsid_rule.add(first_packet_id + "|" + second_packet_id)
         if len(list(set(first_packet_ar) & set(second_packet_ar)))>=1:
-            if "Send" in first_packet:
-                first_packet_id = first_packet.split('/')[0] + " Send"
-            else:
-                first_packet_id = first_packet.split('/')[0] + " Receive"
-            if "Send" in second_packet:
-                second_packet_id = second_packet.split('/')[0] + " Send"
-            else:
-                second_packet_id = second_packet.split('/')[0] + " Receive"
-            #Rule generation
             found_ar_rule.add(first_packet_id + "|" + second_packet_id)
+    #outputing the rules
     with open ("extracted_rules.txt","w") as efile:
-        efile.write("Observed packets with intersecting advertising router sets:\n")
+        efile.write("Observed packets with intersecting LS Type sets:\n")
         for i in found_ar_rule:
             efile.write(i+"\n")
+        efile.write("------------------------------------------------------------------------------\n")
+
+        efile.write("Observed packets with intersecting Link State ID sets:\n")
+        for i in found_ar_rule:
+            efile.write(i+"\n")
+        efile.write("------------------------------------------------------------------------------\n")
+
+        efile.write("Observed packets with intersecting Advertising Router sets:\n")
+        for i in found_ar_rule:
+            efile.write(i+"\n")
+        
 
 ### 88 89 99 100
 #AR 0  1  1  0
