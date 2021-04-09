@@ -318,18 +318,24 @@ def rule_extraction(final_frequency):
     #outputing the rules
     with open ("extracted_rules.txt","w") as efile:
         efile.write("Observed packets with intersecting LS Type sets:\n")
+        rule_counter = 0
         for i in found_ar_rule:
-            efile.write(i+"\n")
+            efile.write(str(rule_counter)+") "+i+"\n")
+            rule_counter = rule_counter+1
         efile.write("------------------------------------------------------------------------------\n")
 
+        rule_counter = 0
         efile.write("Observed packets with intersecting Link State ID sets:\n")
         for i in found_ar_rule:
-            efile.write(i+"\n")
+            efile.write(str(rule_counter)+") "+i+"\n")
+            rule_counter = rule_counter+1
         efile.write("------------------------------------------------------------------------------\n")
 
+        rule_counter = 0
         efile.write("Observed packets with intersecting Advertising Router sets:\n")
         for i in found_ar_rule:
-            efile.write(i+"\n")
+            efile.write(str(rule_counter)+") "+i+"\n")
+            rule_counter = rule_counter+1
         
 
 ### 88 89 99 100
@@ -348,10 +354,12 @@ def main():
     files3 = ['800_1_3.txt','800_2_3.txt','800_3_3.txt','800_4_3.txt',
     '800_5_3.txt','800_6_3.txt','800_7_3.txt','800_8_3.txt',
     '800_9_3.txt','800_10_3.txt','800_11_3.txt','800_12_3.txt',
-    '800_13_3.txt','800_14_3.txt','800_15_3.txt']
+    '800_13_3.txt','800_14_3.txt','800_15_3.txt','i800_1_3.txt',
+    'i800_2_3.txt','i800_3_3.txt','i800_4_3.txt','i800_5_3.txt']
     files2 = ["1000_1_2.txt","1000_2_2.txt","1000_3_2.txt","1000_4_2.txt",
     "1000_5_2.txt","1000_6_2.txt","1000_7_2.txt","1000_8_2.txt","1000_9_2.txt",
-    "1000_10_2.txt"]
+    "1000_10_2.txt","i1000_1_2.txt","i1000_2_2.txt","i1000_3_2.txt","i1000_4_2.txt",
+    "i1000_5_2.txt"]
     for input_file3 in files3:
         final_result.append(triangle(input_file3))
     for input_file2 in files2:
