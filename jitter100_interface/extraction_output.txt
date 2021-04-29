@@ -27,24 +27,24 @@ Hello Packet (1)SendDB Description (2)Send54
 /
 List of packets can be received given last sent packet type
 Hello Packet (1)
-{'LS Acknowledge (5)', 'LS Request (3)', 'DB Description (2)', 'Hello Packet (1)', 'LS Update (4)'}
-0.14516129032258066/0.019851116625310174/0.2692307692307692/0.42431761786600497/0.141439205955335/
+{'DB Description (2)', 'LS Acknowledge (5)', 'Hello Packet (1)', 'LS Update (4)', 'LS Request (3)'}
+0.2692307692307692/0.14516129032258066/0.42431761786600497/0.141439205955335/0.019851116625310174/
 
 DB Description (2)
-{'LS Request (3)', 'Hello Packet (1)', 'LS Update (4)', 'DB Description (2)'}
-0.1388888888888889/0.16666666666666666/0.11574074074074074/0.5787037037037037/
+{'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Request (3)'}
+0.11574074074074074/0.5787037037037037/0.16666666666666666/0.1388888888888889/
 
 LS Request (3)
-{'LS Request (3)', 'LS Update (4)', 'DB Description (2)'}
-0.2/0.518918918918919/0.2810810810810811/
+{'LS Update (4)', 'DB Description (2)', 'LS Request (3)'}
+0.518918918918919/0.2810810810810811/0.2/
 
 LS Update (4)
-{'LS Acknowledge (5)', 'LS Request (3)', 'DB Description (2)', 'Hello Packet (1)', 'LS Update (4)'}
-0.2511961722488038/0.03588516746411483/0.028708133971291867/0.03588516746411483/0.6483253588516746/
+{'DB Description (2)', 'LS Acknowledge (5)', 'Hello Packet (1)', 'LS Update (4)', 'LS Request (3)'}
+0.028708133971291867/0.2511961722488038/0.03588516746411483/0.6483253588516746/0.03588516746411483/
 
 LS Acknowledge (5)
-{'LS Acknowledge (5)', 'Hello Packet (1)', 'DB Description (2)', 'LS Update (4)'}
-0.3761814744801512/0.21550094517958412/0.030245746691871456/0.3780718336483932/
+{'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
+0.3780718336483932/0.030245746691871456/0.21550094517958412/0.3761814744801512/
 
 start_p
 0.2923467537178092/0.07834602829162132/0.1342038447587958/0.3032281465360899/0.19187522669568371/
@@ -52,22 +52,22 @@ start_p
 ###########################################################################################################################################################
 List of packets can be send given last received packet type
 DB Description (2)
-{'LS Request (3)', 'Hello Packet (1)', 'LS Update (4)', 'DB Description (2)'}
-94/110/12/234/
+{'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Request (3)'}
+12/234/110/94/
 
 LS Update (4)
-{'LS Acknowledge (5)', 'LS Request (3)', 'DB Description (2)', 'Hello Packet (1)', 'LS Update (4)'}
-179/30/28/90/834/
+{'DB Description (2)', 'LS Acknowledge (5)', 'Hello Packet (1)', 'LS Update (4)', 'LS Request (3)'}
+28/179/90/834/30/
 
 LS Acknowledge (5)
-{'LS Acknowledge (5)', 'LS Request (3)', 'DB Description (2)', 'Hello Packet (1)', 'LS Update (4)'}
-288/14/2/6/9/
+{'DB Description (2)', 'LS Acknowledge (5)', 'Hello Packet (1)', 'LS Update (4)', 'LS Request (3)'}
+2/288/6/9/14/
 
 Hello Packet (1)
-{'LS Request (3)', 'Hello Packet (1)', 'LS Update (4)', 'DB Description (2)'}
-14/661/24/46/
+{'LS Update (4)', 'DB Description (2)', 'LS Request (3)', 'Hello Packet (1)'}
+24/46/14/661/
 
 LS Request (3)
-{'LS Request (3)', 'LS Update (4)', 'DB Description (2)'}
-22/92/14/
+{'LS Update (4)', 'DB Description (2)', 'LS Request (3)'}
+92/14/22/
 

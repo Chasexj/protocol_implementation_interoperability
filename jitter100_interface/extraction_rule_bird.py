@@ -35,7 +35,7 @@ def triangle(fname):
     des_router = ""
     message = ""
     #source router + interface = destination router
-    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.210.10.0.18":"172.17.0.4","172.17.0.310.10.0.3":"172.17.0.2","172.17.0.310.10.0.10":"172.17.0.4","172.17.0.410.10.0.11":"172.17.0.3","172.17.0.410.10.0.19":"172.17.0.2"}
+    recv ={"10.10.0.210.10.0.2":"10.10.0.3","10.10.0.210.10.0.18":"10.10.0.11","10.10.0.310.10.0.3":"10.10.0.2","10.10.0.310.10.0.10":"10.10.0.11","10.10.0.1110.10.0.11":"10.10.0.3","10.10.0.1110.10.0.19":"10.10.0.2"}
     #r1 = 172.17.0.3
     r1 = []
     #r2 = 172.17.0.4
@@ -93,7 +93,7 @@ def triangle(fname):
                                     message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
                         else:
                             break
-                
+
                 #add ls ack fields
                 elif message == "LS Acknowledge (5)":
                     while peek_line(file):
@@ -121,18 +121,18 @@ def triangle(fname):
                             break
                 #####
                 #Assign messages to router sets with sent or receive at end of message
-                if src_router == "172.17.0.3":
+                if src_router == "10.10.0.2":
                     r1.append(message+"Send")
-                elif src_router == "172.17.0.4":
+                elif src_router == "10.10.0.3":
                     r2.append(message+"Send")
-                elif src_router == "172.17.0.5":
+                elif src_router == "10.10.0.11":
                     r3.append(message+"Send")
                 
-                if des_router == "172.17.0.3":
+                if des_router == "10.10.0.2":
                     r1.append(message+"Receive")
-                elif des_router == "172.17.0.4":
+                elif des_router == "10.10.0.3":
                     r2.append(message+"Receive")
-                elif des_router == "172.17.0.5":
+                elif des_router == "10.10.0.11":
                     r3.append(message+"Receive")
     return r1,r2,r3
 
@@ -143,7 +143,7 @@ def double(fname):
     des_router = ""
     message = ""
     #source router + interface = destination router
-    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.310.10.0.3":"172.17.0.2"}
+    recv ={"10.10.0.210.10.0.2":"10.10.0.3","10.10.0.310.10.0.3":"10.10.0.2"}
     #r7 = 172.17.0.3
     r7 = []
     #r8 = 172.17.0.4
@@ -172,7 +172,7 @@ def double(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
-                
+
                 #####can add more information/conditions to distinguish packets if want to
 
                 #add lsu fields
@@ -200,7 +200,7 @@ def double(fname):
                                     message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
                         else:
                             break
-                
+
                 #add ls ack fields
                 elif message == "LS Acknowledge (5)":
                     while peek_line(file):
@@ -228,14 +228,14 @@ def double(fname):
                             break
                 #####
                 #Assign messages to router sets with sent or receive at end of message
-                if src_router == "172.17.0.3":
+                if src_router == "10.10.0.2":
                     r7.append(message+"Send")
-                elif src_router == "172.17.0.4":
+                elif src_router == "10.10.0.3":
                     r8.append(message+"Send")
                 
-                if des_router == "172.17.0.3":
+                if des_router == "10.10.0.2":
                     r7.append(message+"Receive")
-                elif des_router == "172.17.0.4":
+                elif des_router == "10.10.0.3":
                     r8.append(message+"Receive")
     return r7,r8
 
@@ -258,6 +258,7 @@ def run(final_result):
     final_frequency = defaultdict()
     for i in transition_counter:
         final_frequency[i] = transition_counter[i]/first_total[i.split("|||")[0]]
+
 
     #proceed to rule extraction for acceptable sets
     rule_extraction(final_frequency)
@@ -293,6 +294,7 @@ def run(final_result):
     # plt.subplots.figure = plot_graph(mc)[1]
     # plt.savefig("mc.png")
 
+#computing the accepatable sets
 def rule_extraction(final_frequency):
     print("Extracting rules...")
     #default dict of investigating items
@@ -333,14 +335,15 @@ def rule_extraction(final_frequency):
         else:
             second_packet_id = second_packet.split('/')[0] + " Receive"
 
- #identifying packets with intersection in types/id, more conditions can be added to add specification        if len(list(set(first_packet_lst) & set(second_packet_lst)))>=1:
+        #identifying packets with intersection in types/id, more conditions can be added to add specification
+        if len(list(set(first_packet_lst) & set(second_packet_lst)))>=1:
             found_lst_rule.add(first_packet_id + "|" + second_packet_id)
         if len(list(set(first_packet_lsid) & set(second_packet_lsid)))>=1:
             found_lsid_rule.add(first_packet_id + "|" + second_packet_id)
         if len(list(set(first_packet_ar) & set(second_packet_ar)))>=1:
             found_ar_rule.add(first_packet_id + "|" + second_packet_id)
     #outputing the rules
-    with open ("extracted_rules.txt","w") as efile:
+    with open ("extracted_rules_bird.txt","w") as efile:
         efile.write("Observed packets with intersecting LS Type sets:\n")
         rule_counter = 0
         for i in found_ar_rule:
@@ -361,25 +364,17 @@ def rule_extraction(final_frequency):
             efile.write(str(rule_counter)+") "+i+"\n")
             rule_counter = rule_counter+1
         
-
-
 def main():
 
     final_result = []
     print("Isolating packets from log files...")
-    ###i800_1 to 5 is 250 and 800 interface down
-    ###i800_6 to 9 is 250 and down for 60s
-    files3 = ['800_1_3.txt','800_2_3.txt','800_3_3.txt','800_4_3.txt',
-    '800_5_3.txt','800_6_3.txt','800_7_3.txt','800_8_3.txt',
-    '800_9_3.txt','800_10_3.txt','800_11_3.txt','800_12_3.txt',
-    '800_13_3.txt','800_14_3.txt','800_15_3.txt','i800_1_3.txt',
-    'i800_2_3.txt','i800_3_3.txt','i800_4_3.txt','i800_5_3.txt',
-    'i800_6_3.txt','i800_7_3.txt','i800_8_3.txt','i800_9_3.txt',
-    'i800_10_3.txt']
-    files2 = ["1000_1_2.txt","1000_2_2.txt","1000_3_2.txt","1000_4_2.txt",
-    "1000_5_2.txt","1000_6_2.txt","1000_7_2.txt","1000_8_2.txt","1000_9_2.txt",
-    "1000_10_2.txt","i1000_1_2.txt","i1000_2_2.txt","i1000_3_2.txt","i1000_4_2.txt",
-    "i1000_5_2.txt"]
+    files3 = ['b800_1_3.txt','b800_2_3.txt','b800_3_3.txt','b800_4_3.txt',
+    'b800_5_3.txt','b800_6_3.txt','b800_7_3.txt','b800_8_3.txt',
+    'b800_9_3.txt','b800_10_3.txt','b800_11_3.txt','b800_12_3.txt',
+    'b800_13_3.txt','b800_14_3.txt','b800_15_3.txt']
+    files2 = ["b1000_1_2.txt","b1000_2_2.txt","b1000_3_2.txt","b1000_4_2.txt",
+    "b1000_5_2.txt","b1000_6_2.txt","b1000_7_2.txt","b1000_8_2.txt","b1000_9_2.txt",
+    "b1000_10_2.txt"]
     for input_file3 in files3:
         final_result.append(triangle(input_file3))
     for input_file2 in files2:

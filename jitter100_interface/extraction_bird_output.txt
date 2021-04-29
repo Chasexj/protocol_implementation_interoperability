@@ -1,43 +1,43 @@
 List of packets can be received given last sent packet type
+Hello Packet (1)
+{'LS Request (3)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
+16/114/217/342/117/
+
 DB Description (2)
-{'LS Request (3)', 'DB Description (2)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
-135/286/30/9/
+{'Hello Packet (1)', 'LS Request (3)', 'LS Update (4)', 'DB Description (2)'}
+36/30/25/125/
 
 LS Request (3)
-{'DB Description (2)', 'LS Update (4)', 'LS Request (3)'}
-100/60/56/
+{'LS Request (3)', 'LS Update (4)', 'DB Description (2)'}
+74/192/104/
 
 LS Update (4)
-{'LS Update (4)', 'Hello Packet (1)', 'LS Acknowledge (5)', 'LS Request (3)', 'DB Description (2)'}
-922/39/515/29/12/
+{'LS Request (3)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
+30/542/24/30/210/
 
 LS Acknowledge (5)
-{'DB Description (2)', 'LS Update (4)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
-42/279/129/282/
-
-Hello Packet (1)
-{'LS Acknowledge (5)', 'DB Description (2)', 'Hello Packet (1)', 'LS Update (4)'}
-21/140/642/82/
+{'Hello Packet (1)', 'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)'}
+114/199/200/16/
 
 ###########################################################################################################################################################
 List of packets can be send given last received packet type
-Hello Packet (1)
-{'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
-128/80/1062/63/
-
 DB Description (2)
-{'LS Request (3)', 'DB Description (2)', 'Hello Packet (1)', 'LS Update (4)'}
-81/362/120/28/
-
-LS Request (3)
-{'LS Request (3)', 'DB Description (2)', 'LS Update (4)'}
-139/108/70/
+{'Hello Packet (1)', 'LS Request (3)', 'LS Update (4)', 'DB Description (2)'}
+110/94/12/234/
 
 LS Update (4)
-{'DB Description (2)', 'LS Update (4)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
-30/968/84/438/
+{'LS Request (3)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
+30/834/28/90/179/
 
 LS Acknowledge (5)
-{'LS Update (4)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
-149/84/326/
+{'LS Request (3)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)', 'LS Acknowledge (5)'}
+14/9/2/6/288/
+
+Hello Packet (1)
+{'Hello Packet (1)', 'LS Request (3)', 'LS Update (4)', 'DB Description (2)'}
+661/14/24/46/
+
+LS Request (3)
+{'LS Request (3)', 'LS Update (4)', 'DB Description (2)'}
+22/92/14/
 
