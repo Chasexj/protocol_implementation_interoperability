@@ -212,7 +212,7 @@ def run(final_result):
                     elif "Receive" in msg:
                         last_receive = msg
     #union and output all sets
-    with open ('extraction_bird_output.txt', 'w') as f:
+    with open ('extraction_output.txt', 'w') as f:
         f.write("List of packets can be received given last sent packet type"+"\n")
         for key in recv_dict:
             f.write(key+"\n")
