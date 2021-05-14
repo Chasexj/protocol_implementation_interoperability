@@ -18,7 +18,7 @@ def peek_line(f):
     f.seek(pos)
     return line
 
-def trial_1(fname):
+def triangle(fname):
     inter = ""
     src_router = ""
     des_router = ""
@@ -51,6 +51,40 @@ def trial_1(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
+                #####can add more information/conditions to distinguish packets if want to
+                #####below is excample
+                if message == "LS Update (4)" or message == "LS Acknowledge (5)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            # if "LS Type" in line:
+                            #     LSTline = line.strip("\n")
+                            #     LSTline = LSTline.strip('\t')
+                            #     LSTline = LSTline.strip("LS Type: ")
+                            # elif "Link State ID: " in line:
+                            #     LSIDline = line.strip("\n")
+                            #     LSIDline = LSIDline.strip('\t')
+                            #     LSIDline = LSIDline.strip("Link State ID: ")
+                            # elif "Advertising Router" in line:
+                            #     ARline = line.strip("\n")
+                            #     ARline = ARline.strip('\t')
+                            #     ARline = ARline.strip("Advertising Router: ")
+                            # elif "Sequence Number" in line:
+                            #     SNline = line.strip("\n")
+                            #     SNline = SNline.strip('\t')
+                            #     SNline = SNline.strip("Sequence Number: ")
+                            #     if "/AR"+ARline + "SN"+SNline not in message:
+                            #         message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
+                            if "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "SN"+SNline not in message:
+                                    message = message + "/SN"+SNline+"END"
+                        else:
+                            break
+                #####
+                #Assign messages to router sets with sent or receive at end of message
                 if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
                 elif src_router == "172.17.0.3":
@@ -163,9 +197,10 @@ def trial_1(fname):
                 r3_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
 
-    return r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv
+    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv]
+    return result
 
-def trial_2(fname):
+def double(fname):
     inter = ""
     src_router = ""
     des_router = ""
@@ -197,6 +232,40 @@ def trial_2(fname):
                 src_router = line
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
+                #####can add more information/conditions to distinguish packets if want to
+                #####below is excample
+                if message == "LS Update (4)" or message == "LS Acknowledge (5)":
+                    while peek_line(file):
+                        line = file.readline()
+                        if "~" not in line:
+                            # if "LS Type" in line:
+                            #     LSTline = line.strip("\n")
+                            #     LSTline = LSTline.strip('\t')
+                            #     LSTline = LSTline.strip("LS Type: ")
+                            # elif "Link State ID: " in line:
+                            #     LSIDline = line.strip("\n")
+                            #     LSIDline = LSIDline.strip('\t')
+                            #     LSIDline = LSIDline.strip("Link State ID: ")
+                            # elif "Advertising Router" in line:
+                            #     ARline = line.strip("\n")
+                            #     ARline = ARline.strip('\t')
+                            #     ARline = ARline.strip("Advertising Router: ")
+                            # elif "Sequence Number" in line:
+                            #     SNline = line.strip("\n")
+                            #     SNline = SNline.strip('\t')
+                            #     SNline = SNline.strip("Sequence Number: ")
+                            #     if "/AR"+ARline + "SN"+SNline not in message:
+                            #         message = message + "/LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline
+                            if "Sequence Number" in line:
+                                SNline = line.strip("\n")
+                                SNline = SNline.strip('\t')
+                                SNline = SNline.strip("Sequence Number: ")
+                                if "SN"+SNline not in message:
+                                    message = message + "/SN"+SNline+"END"
+                        else:
+                            break
+                #####
+                #Assign messages to router sets with sent or receive at end of message
                 if src_router == "172.17.0.2":
                     r1.append(message+"Send at "+time + " to " + des_router)
                 elif src_router == "172.17.0.3":
@@ -268,64 +337,81 @@ def trial_2(fname):
                 r2_recv_if_send[send_packet.group(1)].add(recv_packet.group(1))
                 break
 
+    result = [r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv]
+    return result
 
-    return r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv
-
-def run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv, r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv):
+def run(final_result):
     send_dict = defaultdict(set)
     recv_dict = defaultdict(set)
 
-    for i in range(8):
-        if i ==0:
-            r_recv_if_send = r1_recv_if_send
-            r_send_if_recv = r1_send_if_recv
-        elif i ==1:
-            r_recv_if_send = r2_recv_if_send
-            r_send_if_recv = r2_send_if_recv
-        elif i ==2:
-            r_recv_if_send = r3_recv_if_send
-            r_send_if_recv = r3_send_if_recv
-        elif i ==3:
-            r_recv_if_send = r4_recv_if_send
-            r_send_if_recv = r4_send_if_recv
-        elif i ==4:
-            r_recv_if_send = r5_recv_if_send
-            r_send_if_recv = r5_send_if_recv
-        elif i ==5:
-            r_recv_if_send = r6_recv_if_send
-            r_send_if_recv = r6_send_if_recv
-        elif i ==6:
-            r_recv_if_send = r7_recv_if_send
-            r_send_if_recv = r7_send_if_recv
-        elif i ==7:
-            r_recv_if_send = r8_recv_if_send
-            r_send_if_recv = r8_send_if_recv
-        #print(type(r_recv_if_send))
-        for item in r_recv_if_send:
-            for item2 in r_recv_if_send[item]:
-                recv_dict[item].add(item2)
-        for item in r_send_if_recv:
-            for item2 in r_send_if_recv[item]:
-                send_dict[item].add(item2)
+    for i in range(len(final_result)):
+        for j in range(len(final_result[i])):
+            if j % 2 == 0:
+                r_recv_if_send = final_result[i][j]
+                r_send_if_recv = final_result[i][j+1]
+                for item in r_recv_if_send:
+                    for item2 in r_recv_if_send[item]:
+                        recv_dict[item].add(item2)
+                for item in r_send_if_recv:
+                    for item2 in r_send_if_recv[item]:
+                        send_dict[item].add(item2)
 
-    print("List of packets can be received given last sent packet type")
-    for key in recv_dict:
-        print(key)
-        print(recv_dict[key])
-        print("\n")
-    print("-------------------------------------------------------------------")
-    print("List of packets can be send given last received packet type")
-    for key in send_dict:
-        print(key)
-        print(send_dict[key])
-        print("\n")
+    with open ('extraction_output.txt', 'w') as f:
+            f.write("List of packets can be received given last sent packet type"+"\n")
+            for key in recv_dict:
+                f.write(key+"\n")
+                f.write(str(recv_dict[key])+"\n")
+                # ##### amount of packet can be added by uncommenting
+                # p_amount = ""
+                # for value in recv_dict[key]:
+                #     pair = key + value
+                #     p_amount = p_amount + str(recv_dict_counter[pair]) + "/"
+                # f.write(p_amount+"\n")
+                # f.write("\n")
+                # #####
+            f.write("###########################################################################################################################################################\n")
+            f.write("List of packets can be send given last received packet type"+"\n")
+            for key in send_dict:
+                f.write(key+"\n")
+                f.write(str(send_dict[key])+"\n")
+
+    with open ('specific_extraction_output.txt', 'w') as f:
+            f.write("List of packets can be received given last sent packet type"+"\n")
+            for key in recv_dict:
+                if "LS Update (4)" in key:
+                f.write(key+"\n")
+                f.write(str(recv_dict[key])+"\n")
+                # ##### amount of packet can be added by uncommenting
+                # p_amount = ""
+                # for value in recv_dict[key]:
+                #     pair = key + value
+                #     p_amount = p_amount + str(recv_dict_counter[pair]) + "/"
+                # f.write(p_amount+"\n")
+                # f.write("\n")
+                # #####
+            f.write("###########################################################################################################################################################\n")
+            f.write("List of packets can be send given last received packet type"+"\n")
+            for key in send_dict:
+                f.write(key+"\n")
+                f.write(str(send_dict[key])+"\n")
 
 
 def main():
-    r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv = trial_1('l800_1_3.txt')
-    r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv = trial_1('l800_2_3.txt')
-    r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv = trial_2('l1000_1_2.txt')
-    run(r1_recv_if_send, r1_send_if_recv, r2_recv_if_send, r2_send_if_recv, r3_recv_if_send, r3_send_if_recv, r4_recv_if_send, r4_send_if_recv, r5_recv_if_send, r5_send_if_recv, r6_recv_if_send, r6_send_if_recv, r7_recv_if_send, r7_send_if_recv, r8_recv_if_send, r8_send_if_recv)
+    final_result = []
+    files3 = ['l800_1_3.txt',
+    'l800_2_3.txt']
+
+    for input_file3 in files3:
+        final_result.append(triangle(input_file3))
+
+    files2 = ['l1000_1_2.txt']
+    for input_file2 in files2:
+        final_result.append(double(input_file2))
+
+    #final_result.append(star('star_1000.txt'))
+    #final_result.append(linear('linear_1000.txt'))
+
+    run(final_result)
 main()
 #DB Description (2)
 #LS Update (4)
