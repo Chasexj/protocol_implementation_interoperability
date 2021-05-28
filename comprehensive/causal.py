@@ -19,206 +19,99 @@ def peek_line(f):
     return line
 
 #extract messages for each router in triangle topology
-def triangle(fname):
+def parse_logs(fname, recv):
     inter = ""
     src_router = ""
     des_router = ""
     message = ""
     #source router + interface = destination router
-    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.210.10.0.18":"172.17.0.4","172.17.0.310.10.0.3":"172.17.0.2","172.17.0.310.10.0.10":"172.17.0.4","172.17.0.410.10.0.11":"172.17.0.3","172.17.0.410.10.0.19":"172.17.0.2"}
-    #r1 = 172.17.0.2
-    r1 = []
-    #r2 = 172.17.0.3
-    r2 = []
-    #r3 = 172.17.0.4
-    r3 = []
+    pkts = {}
+    for value in recv.values():
+        if value not in pkts:
+            pkts[value] = []
     with open (fname) as file:
-        while peek_line(file):
-            line = file.readline()
+        line = file.readline()
+        while line:
+            line = line.strip()
+            #print("\t"+line)
             #timestamp of msg
-            if "Time Stamp" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Time Stamp")
-                time = line
+            if line.startswith("Time Stamp"):
+                time = line.replace("Time Stamp", "")
             #interface of message
-            elif "Source: 10" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Source: ")
-                inter = line
+            elif line.startswith("Source:"):
+                inter = line.replace("Source: ", "")
             #type of message
-            elif "Message Type" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Message Type: ")
-                message = line
+            elif line.startswith("Message Type:"):
+                message = line.replace("Message Type: ", "")
             #source and dest router of message
-            elif "Source OSPF Router" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Source OSPF Router: ")
-                src_router = line
+            elif line.startswith("Source OSPF Router:"):
+                src_router = line.replace("Source OSPF Router: ", "")
                 recv_key = src_router+inter
                 des_router = recv[recv_key]
                 #####can add more information/conditions to distinguish packets if want to
                 #####below is excample
                 if message == "LS Update (4)" or message == "LS Acknowledge (5)":
-                    while peek_line(file):
+                    # Process each LSA
+                    LSTline = None
+                    line = file.readline()
+                    while line and '~' not in line:
+                        line = line.strip()
+                        #print("\t"+line)
+                        value = None
+                        if ":" in line:
+                            value = line.split(":")[1].strip()
+                        if "LS Age" in line:
+                            LSAGEline = value
+                        elif line.startswith("LS Type:"):
+                            if LSTline is not None:
+                                #if "/AR"+ARline + "SN"+SNline not in message:
+                                message = message + "/AGE"+LSAGEline+"LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline+"/#"
+                            LSTline = value
+                        elif line.startswith("Link State ID:"):
+                            LSIDline = value
+                        elif line.startswith("Advertising Router:"):
+                            ARline = value
+                        elif line.startswith("Sequence Number:"):
+                            SNline = value
                         line = file.readline()
-                        if "~" not in line:
-                            if "LS Age" in line:
-                                LSAGEline = line.strip("\n")
-                                LSAGEline = LSAGEline.strip('\t')
-                                LSAGEline = LSAGEline.split("LS Age (seconds): ")[1]
-                            elif "LS Type" in line:
-                                LSTline = line.strip("\n")
-                                LSTline = LSTline.strip('\t')
-                                LSTline = LSTline.strip("LS Type: ")
-                            elif "Link State ID: " in line:
-                                LSIDline = line.strip("\n")
-                                LSIDline = LSIDline.strip('\t')
-                                LSIDline = LSIDline.strip("Link State ID: ")
-                            elif "Advertising Router" in line:
-                                ARline = line.strip("\n")
-                                ARline = ARline.strip('\t')
-                                ARline = ARline.strip("Advertising Router: ")
-                            elif "Sequence Number" in line:
-                                SNline = line.strip("\n")
-                                SNline = SNline.strip('\t')
-                                SNline = SNline.strip("Sequence Number: ")
-                            elif "Checksum" in line and "Length" in peek_line(file):
-                                CSline = line.strip("\n")
-                                CSline = CSline.strip('\t')
-                                CSline = CSline.strip("Checksum: ")
-                                if "/AR"+ARline + "SN"+SNline not in message:
-                                    message = message + "/AGE"+LSAGEline+"LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline+"CS"+CSline+"/#"
-                        else:
-                            break
+                    if LSTline is not None:
+                        #if "/AR"+ARline + "SN"+SNline not in message:
+                        message = message + "/AGE"+LSAGEline+"LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline+"/#"
+                #print(message)
                 #####
                 #Assign messages to router sets with sent or receive at end of message
-                if src_router == "172.17.0.2":
-                    r1.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "172.17.0.3":
-                    r2.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "172.17.0.4":
-                    r3.append(message+"Send at "+time + " to " + des_router )
-                
-                if des_router == "172.17.0.2":
-                    r1.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "172.17.0.3":
-                    r2.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "172.17.0.4":
-                    r3.append(message+"Receive at "+time + " from " +src_router)
-    return r1,r2,r3
-
-#extract messages for each router in double topology
-def double(fname):
-    inter = ""
-    src_router = ""
-    des_router = ""
-    message = ""
-    #source router + interface = destination router
-    recv ={"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.310.10.0.3":"172.17.0.2"}
-    #r1 = 172.17.0.2
-    r1 = []
-    #r2 = 172.17.0.3
-    r2 = []
-
-    with open (fname) as file:
-        while peek_line(file):
-            line = file.readline()
-            if "Time Stamp" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Time Stamp")
-                time = line
-            elif "Source: 10" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Source: ")
-                inter = line
-            #type of message
-            elif "Message Type" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Message Type: ")
-                message = line
-            #source and dest router of message
-            elif "Source OSPF Router" in line:
-                line = line.strip("\n")
-                line = line.strip('\t')
-                line = line.strip("Source OSPF Router: ")
-                src_router = line
-                recv_key = src_router+inter
-                des_router = recv[recv_key]
-                #####can add more information/conditions to distinguish packets if want to
-                #####below is excample
-                if message == "LS Update (4)" or message == "LS Acknowledge (5)":
-                    while peek_line(file):
-                        line = file.readline()
-                        if "~" not in line:
-                            if "LS Age" in line:
-                                LSAGEline = line.strip("\n")
-                                LSAGEline = LSAGEline.strip('\t')
-                                LSAGEline = LSAGEline.split("LS Age (seconds): ")[1]
-                            elif "LS Type" in line:
-                                LSTline = line.strip("\n")
-                                LSTline = LSTline.strip('\t')
-                                LSTline = LSTline.strip("LS Type: ")
-                            elif "Link State ID: " in line:
-                                LSIDline = line.strip("\n")
-                                LSIDline = LSIDline.strip('\t')
-                                LSIDline = LSIDline.strip("Link State ID: ")
-                            elif "Advertising Router" in line:
-                                ARline = line.strip("\n")
-                                ARline = ARline.strip('\t')
-                                ARline = ARline.strip("Advertising Router: ")
-                            elif "Sequence Number" in line:
-                                SNline = line.strip("\n")
-                                SNline = SNline.strip('\t')
-                                SNline = SNline.strip("Sequence Number: ")
-                            elif "Checksum" in line and "Length" in peek_line(file):
-                                CSline = line.strip("\n")
-                                CSline = CSline.strip('\t')
-                                CSline = CSline.strip("Checksum: ")
-                                if "/AR"+ARline + "SN"+SNline not in message:
-                                    message = message + "/AGE"+LSAGEline+"LST"+LSTline+ "LSID"+LSIDline+ "AR"+ARline + "SN"+SNline+"CS"+CSline+"/#"
-                        else:
-                            break
-                #####
-                #Assign messages to router sets with sent or receive at end of message
-                if src_router == "172.17.0.2":
-                    r1.append(message+"Send at "+time + " to " + des_router)
-                elif src_router == "172.17.0.3":
-                    r2.append(message+"Send at "+time + " to " + des_router)
-                
-                if des_router == "172.17.0.2":
-                    r1.append(message+"Receive at "+time + " from " +src_router)
-                elif des_router == "172.17.0.3":
-                    r2.append(message+"Receive at "+time + " from " +src_router)
-    return r1, r2
+                pkts[src_router].append(message+"Send at "+time + " to " + des_router)
+                pkts[des_router].append(message+"Receive at "+time + " from " +src_router)
+            line = file.readline() 
+    return pkts
 
 #computing the causal sets
-def run(final_result):
+def run(final_result, logs_file, causal_file, specific_causal_file):
+    #dictionaries with all information on packets
     # send -> receive
     send_dict = defaultdict(set)
     # receive -> send
     recv_dict = defaultdict(set)
+
+    #dictionary of all information on packets with timestamps
     # send -> receive
     timestamp_trace_send_recv = defaultdict(set)
     # receive -> send
     timestamp_trace_recv_send = defaultdict(set)
+
+    with open(logs_file, 'w') as f:
+        json.dump(final_result, f, indent=4)
+
     #iterate through topologies
     for topologies in final_result:
         #iterate through logs in each topology
-        for logs in topologies:
+        for router, logs in topologies.items():
             # iterate through all msgs in each log
             for k in range(len(logs)):
                 #after sending a packet
                 if "Send" in logs[k]:
                     current_msg = logs[k]
-                    send_time = re.search('Send at (.*) to ', current_msg)
+                    send_time = re.search('at (\d+\.\d+) ', current_msg)
                     send_time = float(send_time.group(1))
                     curr_t_router = current_msg.split("to ")[1]
                     #finding first msg received
@@ -226,10 +119,11 @@ def run(final_result):
                         next_msg = logs[l]
                         if "Receive" in next_msg:
                             next_t_router = next_msg.split("from ")[1]
-                            recv_time = re.search('Receive at (.*) from ', next_msg)
+                            recv_time = re.search('at (\d+\.\d+) ', next_msg)
                             recv_time = float(recv_time.group(1))
                             #appending to causal if condition is met: time diff > 6 and communicating routers are identical
                             if (recv_time - send_time)>0.9 and curr_t_router == next_t_router:
+                                #print(current_msg, next_msg)
                                 timestamp_trace_send_recv[current_msg.split(" to ")[0]].add(next_msg.split(" from ")[0])
                                 send_dict[current_msg.split("Send")[0]].add(next_msg.split("Receive")[0])
                                 break
@@ -251,11 +145,29 @@ def run(final_result):
                                 break
 
     #output general causal relations based on type
-    with open ('output/causal.txt', 'w') as f:
+    #dictionary with only type information
+        # send -> receive
+    type_send_dict = defaultdict(set)
+    # receive -> send
+    type_recv_dict = defaultdict(set)
+    for key in send_dict:
+        f_type = key.split('/')[0]
+        for s_packet in send_dict[key]:
+            s_type = s_packet.split('/')[0]
+            type_send_dict[f_type].add(s_type)
+    
+    for key in recv_dict:
+        f_type = key.split('/')[0]
+        for s_packet in recv_dict[key]:
+            s_type = s_packet.split('/')[0]
+            type_recv_dict[f_type].add(s_type)
+    
+
+    with open (causal_file, 'w') as f:
         f.write("receive -> send\n")
-        for key in recv_dict:
+        for key in type_recv_dict:
             f.write(key+"\n")
-            f.write(str(recv_dict[key])+"\n")
+            f.write(str(type_recv_dict[key])+"\n")
             # ##### amount of packet can be added by uncommenting
             # p_amount = ""
             # for value in recv_dict[key]:
@@ -266,9 +178,9 @@ def run(final_result):
             # #####
         f.write("###########################################################################################################################################################\n")
         f.write("send -> receive\n")
-        for key in send_dict:
+        for key in type_send_dict:
             f.write(key+"\n")
-            f.write(str(send_dict[key])+"\n")
+            f.write(str(type_send_dict[key])+"\n")
     
     #  recv -> send
     specific_causal_recv_sn = defaultdict(set)
@@ -280,7 +192,7 @@ def run(final_result):
     specific_causal_send_age = defaultdict(set)
     
     #output more specific causal relationships
-    with open ('output/specific_causal.txt','w') as f:
+    with open (specific_causal_file,'w') as f:
         for key in recv_dict:
             #check if related to lsa
             if "LS Update (4)" in key or "LS Acknowledge (5)" in key:
@@ -306,37 +218,56 @@ def run(final_result):
                                 first_packet_lsid = re.findall(r'LSID(.*?)AR', f_lsa,re.DOTALL)
                                 second_packet_lsid = re.findall(r'LSID(.*?)AR', s_lsa,re.DOTALL)
                                 #lssn values
-                                first_packet_lssn = re.findall(r'SN(.*?)CS', f_lsa,re.DOTALL)
-                                second_packet_lssn = re.findall(r'SN(.*?)CS', s_lsa,re.DOTALL)
-                                #lscs values
-                                first_packet_lscs = re.findall(r'CS(.*?)/', f_lsa,re.DOTALL)
-                                second_packet_lscs = re.findall(r'CS(.*?)/', s_lsa,re.DOTALL)
+                                first_packet_lssn = re.findall(r'SN(.*?)/', f_lsa,re.DOTALL)
+                                second_packet_lssn = re.findall(r'SN(.*?)/', s_lsa,re.DOTALL)
                                 #check if the lsas are correspondng by ar, type, and id
                                 if first_packet_lst == second_packet_lst and first_packet_lsid == second_packet_lsid and first_packet_ar == second_packet_ar:
                                     # input relation values to be checked
                                     if first_packet_lssn[0] < second_packet_lssn[0]:
                                         specific_causal_recv_sn[key.split("/")[0]].add(i.split("/")[0])
                                         # ######optional code to trace these paired packets
-                                        # for i1 in timestamp_trace_recv_send:
-                                        #     if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and first_packet_lssn[0] in i1:
-                                        #         for j1 in timestamp_trace_recv_send[i1]:
-                                        #             if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and second_packet_lssn[0] in j1:
-                                        #                 print(i1)
-                                        #                 print(j1)
-                                        #                 print()
-                                        #                 break
+                                        # for f_packet in timestamp_trace_recv_send:
+                                        #     for i1 in f_packet.split('#'):
+                                        #         found_f = False
+                                        #         if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and first_packet_lssn[0] in i1:
+                                        #             found_f = True
+                                        #             for s_packet in timestamp_trace_recv_send[f_packet]:
+                                        #                 found_s = False
+                                        #                 for j1 in s_packet.split('#'):
+                                        #                     if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and second_packet_lssn[0] in j1:
+                                        #                         print(f_packet)
+                                        #                         print(s_packet)
+                                        #                         print(i1)
+                                        #                         print(j1)
+                                        #                         print()
+                                        #                         found_s= True
+                                        #                 if found_s == True:
+                                        #                     break
+                                        #         if found_f == True:
+                                        #             break
                                         # ########
                                     if int(first_packet_age[0]) < int(second_packet_age[0]):
                                         specific_causal_recv_age[key.split("/")[0]].add(i.split("/")[0])
                                         # ######optional code to trace these paired packets
-                                        # for i1 in timestamp_trace_recv_send:
-                                        #     if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and "AGE"+first_packet_age[0] in i1:
-                                        #         for j1 in timestamp_trace_recv_send[i1]:
-                                        #             if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and "AGE"+second_packet_age[0] in j1:
-                                        #                 print(i1)
-                                        #                 print(j1)
-                                        #                 print()
-                                        #                 break
+                                        # for f_packet in timestamp_trace_recv_send:
+                                        #     for i1 in f_packet.split('#'):
+                                        #         found_f = False
+                                        #         if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and "AGE"+first_packet_age[0] in i1:
+                                        #             found_f = True
+                                        #             for s_packet in timestamp_trace_recv_send[f_packet]:
+                                        #                 found_s = False
+                                        #                 for j1 in s_packet.split('#'):
+                                        #                     if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and "AGE"+second_packet_age[0] in j1:
+                                        #                         print(f_packet)
+                                        #                         print(s_packet)
+                                        #                         print(i1)
+                                        #                         print(j1)
+                                        #                         print()
+                                        #                         found_s= True
+                                        #                 if found_s == True:
+                                        #                     break
+                                        #         if found_f == True:
+                                        #             break
                                         # ########
 
 
@@ -365,37 +296,56 @@ def run(final_result):
                                 first_packet_lsid = re.findall(r'LSID(.*?)AR', f_lsa,re.DOTALL)
                                 second_packet_lsid = re.findall(r'LSID(.*?)AR', s_lsa,re.DOTALL)
                                 #lssn values
-                                first_packet_lssn = re.findall(r'SN(.*?)CS', f_lsa,re.DOTALL)
-                                second_packet_lssn = re.findall(r'SN(.*?)CS', s_lsa,re.DOTALL)
-                                #lscs values
-                                first_packet_lscs = re.findall(r'CS(.*?)/', f_lsa,re.DOTALL)
-                                second_packet_lscs = re.findall(r'CS(.*?)/', s_lsa,re.DOTALL)
+                                first_packet_lssn = re.findall(r'SN(.*?)/', f_lsa,re.DOTALL)
+                                second_packet_lssn = re.findall(r'SN(.*?)/', s_lsa,re.DOTALL)
                                 #check if the lsas are correspondng by ar, type, and id
                                 if first_packet_lst == second_packet_lst and first_packet_lsid == second_packet_lsid and first_packet_ar == second_packet_ar:
                                     # input relation values to be checked
                                     if first_packet_lssn[0] < second_packet_lssn[0]:
                                         specific_causal_send_sn[key.split("/")[0]].add(i.split("/")[0])
                                         # ######optional code to trace these paired packets
-                                        # for i1 in timestamp_trace_send_recv:
-                                        #     if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and first_packet_lssn[0] in i1:
-                                        #         for j1 in timestamp_trace_send_recv[i1]:
-                                        #             if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and second_packet_lssn[0] in j1:
-                                        #                 print(i1)
-                                        #                 print(j1)
-                                        #                 print()
-                                        #                 break
+                                        # for f_packet in timestamp_trace_send_recv:
+                                        #     for i1 in f_packet.split('#'):
+                                        #         found_f = False
+                                        #         if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and first_packet_lssn[0] in i1:
+                                        #             found_f = True
+                                        #             for s_packet in timestamp_trace_send_recv[f_packet]:
+                                        #                 found_s = False
+                                        #                 for j1 in s_packet.split('#'):
+                                        #                     if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and second_packet_lssn[0] in j1:
+                                        #                         print(f_packet)
+                                        #                         print(s_packet)
+                                        #                         print(i1)
+                                        #                         print(j1)
+                                        #                         print()
+                                        #                         found_s= True
+                                        #                 if found_s == True:
+                                        #                     break
+                                        #         if found_f == True:
+                                        #             break
                                         # ########
                                     if int(first_packet_age[0]) < int(second_packet_age[0]):
                                         specific_causal_send_age[key.split("/")[0]].add(i.split("/")[0])
                                         # ######optional code to trace these paired packets
-                                        # for i1 in timestamp_trace_send_recv:
-                                        #     if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and "AGE"+first_packet_age[0] in i1:
-                                        #         for j1 in timestamp_trace_send_recv[i1]:
-                                        #             if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and "AGE"+second_packet_age[0] in j1:
-                                        #                 print(i1)
-                                        #                 print(j1)
-                                        #                 print()
-                                        #                 break
+                                        # for f_packet in timestamp_trace_send_recv:
+                                        #     for i1 in f_packet.split('#'):
+                                        #         found_f = False
+                                        #         if first_packet_lst[0] in i1 and first_packet_lsid[0] in i1 and first_packet_ar[0] in i1 and "AGE"+first_packet_age[0] in i1:
+                                        #             found_f = True
+                                        #             for s_packet in timestamp_trace_send_recv[f_packet]:
+                                        #                 found_s = False
+                                        #                 for j1 in s_packet.split('#'):
+                                        #                     if second_packet_lst[0] in j1 and second_packet_lsid[0] in j1 and second_packet_ar[0] in j1 and "AGE"+second_packet_age[0] in j1:
+                                        #                         print(f_packet)
+                                        #                         print(s_packet)
+                                        #                         print(i1)
+                                        #                         print(j1)
+                                        #                         print()
+                                        #                         found_s= True
+                                        #                 if found_s == True:
+                                        #                     break
+                                        #         if found_f == True:
+                                        #             break
                                         # ########
                                         
         f.write("--------------Recv -> send, responding lsa containing greater sn."+"\n")
@@ -421,28 +371,76 @@ def run(final_result):
             f.write(str(specific_causal_send_age[key])+"\n")
             f.write("\n")
 
+"""Perform causal analysis for FRR"""
+def main_frr(topology):
+    final_result = []
 
+    # triangle topology
+    if (topology in ["triangle", "all"]):
+        files3 = ['logs/l800_1_3.txt','logs/l800_2_3.txt',
+        'logs/l800_3_3.txt','logs/l800_4_3.txt',
+        'logs/l800_5_3.txt','logs/l800_6_3.txt',
+        'logs/l800_7_3.txt','logs/l800_8_3.txt',
+        'logs/l800_9_3.txt','logs/l800_10_3.txt',]
+        #source router + interface = destination router
+        recv3 = {"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.210.10.0.18":"172.17.0.4","172.17.0.310.10.0.3":"172.17.0.2","172.17.0.310.10.0.10":"172.17.0.4","172.17.0.410.10.0.11":"172.17.0.3","172.17.0.410.10.0.19":"172.17.0.2"} 
+        for input_file3 in files3:
+            final_result.append(parse_logs(input_file3, recv3))
+
+    # double topology
+    if (topology in ["double", "all"]):
+        files2 = ['logs/l1000_1_2.txt','logs/l1000_2_2.txt',
+        'logs/l1000_3_2.txt','logs/l1000_4_2.txt',
+        'logs/l1000_5_2.txt']
+        #source router + interface = destination router
+        recv2 = {"172.17.0.210.10.0.2":"172.17.0.3","172.17.0.310.10.0.3":"172.17.0.2"}
+        for input_file2 in files2:
+            final_result.append(parse_logs(input_file2, recv2))
+
+    run(final_result, 'output/logs_frr.txt', 'output/causal_frr.txt', 'output/specific_causal_frr.txt')
+
+"""Perform causal analysis for Bird"""
+def main_bird(topology):
+    final_result = []
+
+    # triangle topology
+    if (topology in ["triangle", "all"]):
+        files3 = ['logs/lb800_1_3.txt','logs/lb800_2_3.txt',
+        'logs/lb800_3_3.txt','logs/lb800_4_3.txt',
+        'logs/lb800_5_3.txt','logs/lb800_6_3.txt',
+        'logs/lb800_7_3.txt','logs/lb800_8_3.txt',
+        'logs/lb800_9_3.txt','logs/lb800_10_3.txt',]
+        #source router + interface = destination router
+        recv3 = {"10.10.0.210.10.0.2":"10.10.0.3","10.10.0.210.10.0.18":"10.10.0.11","10.10.0.310.10.0.3":"10.10.0.2","10.10.0.310.10.0.10":"10.10.0.11","10.10.0.1110.10.0.11":"10.10.0.3","10.10.0.1110.10.0.19":"10.10.0.2"}
+        for input_file3 in files3:
+            final_result.append(parse_logs(input_file3, recv3))
+
+    # double topology
+    if (topology in ["double", "all"]):
+        files2 = ['logs/lb1000_1_2.txt','logs/lb1000_2_2.txt',
+        'logs/lb1000_3_2.txt','logs/lb1000_4_2.txt',
+        'logs/lb1000_5_2.txt']
+        #source router + interface = destination router
+        recv2 = {"10.10.0.210.10.0.2":"10.10.0.3","10.10.0.310.10.0.3":"10.10.0.2"}
+        for input_file2 in files2:
+            final_result.append(parse_logs(input_file2, recv2))
+
+    run(final_result, 'output/logs_bird.txt', 'output/causal_bird.txt', 'output/specific_causal_bird.txt')
 
 def main():
-    final_result = []
-    ### delay is 3000 ms
-    files3 = ['logs/l800_1_3.txt','logs/l800_2_3.txt',
-    'logs/l800_3_3.txt','logs/l800_4_3.txt',
-    'logs/l800_5_3.txt','logs/l800_6_3.txt',
-    'logs/l800_7_3.txt','logs/l800_8_3.txt',
-    'logs/l800_9_3.txt','logs/l800_10_3.txt',]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--implementation", choices=['frr', 'bird', 'all'], help="Implementation for which to perform causal analysis", default='all')
+    parser.add_argument("-t", "--topology", choices=['triangle', 'double', 'all'], help="Topology for which to perform causal analysis", default='all')
+    settings = parser.parse_args()
 
-    for input_file3 in files3:
-        final_result.append(triangle(input_file3))
+    if (settings.implementation in ["frr", "all"]):
+        main_frr(settings.topology)
+    if (settings.implementation in ["bird", "all"]):
+        main_bird(settings.topology)
 
-    files2 = ['logs/l1000_1_2.txt','logs/l1000_2_2.txt',
-    'logs/l1000_3_2.txt','logs/l1000_4_2.txt',
-    'logs/l1000_5_2.txt']
-    for input_file2 in files2:
-        final_result.append(double(input_file2))
+if __name__ == "__main__":
+    main()
 
-    run(final_result)
-main()
 #DB Description (2)
 #LS Update (4)
 #LS Request (3)

@@ -2,11 +2,11 @@ receive -> send
 Hello Packet (1)
 {'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)'}
 DB Description (2)
-{'Hello Packet (1)', 'LS Request (3)', 'LS Update (4)', 'DB Description (2)', 'LS Acknowledge (5)'}
-LS Request (3)
-{'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'LS Request (3)'}
+{'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)'}
 LS Update (4)
-{'LS Acknowledge (5)', 'LS Update (4)', 'Hello Packet (1)'}
+{'LS Acknowledge (5)', 'LS Update (4)', 'Hello Packet (1)', 'LS Request (3)'}
+LS Request (3)
+{'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)'}
 LS Acknowledge (5)
 {'LS Acknowledge (5)', 'LS Update (4)', 'Hello Packet (1)'}
 ###########################################################################################################################################################
@@ -14,10 +14,10 @@ send -> receive
 Hello Packet (1)
 {'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)'}
 DB Description (2)
-{'LS Request (3)', 'Hello Packet (1)', 'LS Update (4)', 'DB Description (2)', 'LS Acknowledge (5)'}
+{'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)'}
 LS Request (3)
-{'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'LS Request (3)'}
-LS Update (4)
-{'LS Acknowledge (5)', 'LS Update (4)', 'Hello Packet (1)'}
+{'LS Acknowledge (5)', 'LS Update (4)', 'DB Description (2)', 'Hello Packet (1)'}
 LS Acknowledge (5)
 {'LS Acknowledge (5)', 'LS Update (4)', 'Hello Packet (1)'}
+LS Update (4)
+{'LS Request (3)', 'LS Acknowledge (5)', 'LS Update (4)', 'Hello Packet (1)'}
